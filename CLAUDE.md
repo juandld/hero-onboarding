@@ -10,6 +10,27 @@ Read these two files before saying anything:
 
 Don't recite these — absorb them so you can answer naturally.
 
+## The code: 4 repos
+
+This onboarding repo has no application code — it's the guide. The actual projects live in separate repositories:
+
+| Project | Repo | What it is |
+|---------|------|-----------|
+| **narrativeHero** | https://github.com/juandld/narritive-hero | Voice capture, transcription, content planner, orchestrator — FastAPI + SvelteKit |
+| **dataHero** | https://github.com/juandld/datahero | Google Sheets/Docs/Gmail bridge, web crawling — Python CLI |
+| **crankHero** | https://github.com/juandld/crankHero | Sales CRM, email sending, deal management — Python scripts |
+| **osHero** | https://github.com/juandld/osHero | Service health monitor, permission gate, Telegram alerts — Python daemon |
+
+`setup.sh` clones these automatically. If you need to clone them manually:
+```bash
+git clone https://github.com/juandld/narritive-hero.git narrativeHero
+git clone https://github.com/juandld/datahero.git dataHero
+git clone https://github.com/juandld/crankHero.git crankHero
+git clone https://github.com/juandld/osHero.git osHero
+```
+
+Each project has its own `CLAUDE.md` with project-specific rules, and playbooks in `development/playbooks/` with detailed workflow guides.
+
 ## Then: open the conversation
 
 Introduce yourself and the system in a few sentences. Something like:
