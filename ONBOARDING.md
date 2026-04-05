@@ -225,3 +225,37 @@ Each project has workflows that go beyond code setup. **Read these before doing 
 | **osHero** | `CLAUDE.md` | Daemon behavior, service registry, alerting conventions |
 
 These aren't optional reading. The email playbook, for example, explains why the send script will reject your email (em dashes, duplicates, missing thread IDs) and what tone to use. The code enforces some rules but not all — the playbooks fill the gap.
+
+## Complete Playbook Index
+
+Before doing real work in any project, read the relevant playbooks. They cover the nuanced workflows that aren't obvious from code alone.
+
+### Ecosystem-wide
+- **[ECOSYSTEM.md](ECOSYSTEM.md)** — Who owns what, data access patterns, hero-comms protocol, dispatch system, permission gate
+
+### narrativeHero (`development/playbooks/`)
+| Playbook | Covers |
+|----------|--------|
+| `content-tts-pipeline.md` | Script format (STEP/PASO), tab versioning, wording stability = caching, language ordering |
+| `orchestrator-workflow.md` | Queue API, task state machine, quality gates, verification protocol, WIP memory |
+| `categorization.md` | 3-gate instruction detection, folder learning from corrections, false positive handling |
+| `telegram-integration.md` | Webhook setup, fast tunnels, session state, podcast decision mode |
+
+### crankHero (`development/`)
+| Playbook | Covers |
+|----------|--------|
+| `email-playbook.md` | Tone rules (casual, no em dashes), send script, pre-send checks, threading, CRM auto-log |
+| `crm-playbook.md` | Deal file schema (YAML frontmatter), stages, logging format, auto-detection, commission sync |
+
+### dataHero (`development/playbooks/`)
+| Playbook | Covers |
+|----------|--------|
+| `data-ownership.md` | What dataHero owns vs doesn't, OAuth setup, credential paths, API bridge |
+| `crawl-pipeline.md` | Markdown configs, batch confirmation, campaign chunking, source profiles |
+| `onboarding-ingestion.md` | Gmail parsing, subject regex, team filtering, dedup state, schema extraction |
+
+### osHero (`development/playbooks/`)
+| Playbook | Covers |
+|----------|--------|
+| `permission-guard.md` | Risk levels, one-shot semantics, exit codes, anti-coercion, escalation flow |
+| `service-supervision.md` | Health checks, dependency ordering, restart backoff, alerting, daily digest |
