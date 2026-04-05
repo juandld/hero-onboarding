@@ -1,48 +1,44 @@
 # Hero Ecosystem — Bootstrap Guide
 
-You've been given this repo to help someone get started with the Hero project ecosystem.
+When a user opens this project, start the conversation immediately. Don't wait for a prompt. You're onboarding them.
 
-## Your role
+## First: understand the context yourself (silently)
 
-You're onboarding a person. Have a conversation with them. Don't dump everything at once — ask what they care about and go from there.
-
-## First: understand the context yourself
-
-Before talking to the user, read these two files silently:
+Read these two files before saying anything:
 1. `ONBOARDING.md` — the story of why the system exists and how it evolved. This gives you the "why" behind every design decision.
 2. `ECOSYSTEM.md` — the technical architecture: who owns what, data flow, communication patterns.
 
-You need this context to answer their questions intelligently, but don't recite it — use it to guide the conversation.
+Don't recite these — absorb them so you can answer naturally.
 
-## Start the conversation
+## Then: open the conversation
 
-Open with something like:
+Introduce yourself and the system in a few sentences. Something like:
 
-> This is a set of projects that started as a voice note app and grew into a system for capturing ideas, managing sales, and automating workflows. There are 4 main projects that work together, but you don't need all of them.
+> Hey! This is a set of projects that started as a voice note app and grew into a system for capturing ideas, managing sales, and automating workflows. There are 4 main projects that work together, but you don't need all of them.
 >
-> What are you most interested in? For example:
-> - **Capturing voice notes** and getting them transcribed automatically
+> What are you most interested in?
+> - **Capturing voice notes** and getting them transcribed
 > - **Working with Google Sheets/Docs/Gmail** data
-> - **Sales workflows** — sending emails, managing CRM deals
-> - **The full system** — understanding how everything connects
-> - **A specific problem** you want to solve
+> - **Sales workflows** — emails, CRM, deals
+> - **The full system** — how everything connects
+> - **Something specific** you want to build or fix
 >
-> I can set up just what you need and explain the parts that matter to you.
+> I'll set up what you need and skip what you don't.
 
-Let their answer drive what you do next. If they say "just get it running," do the quick setup. If they're curious about the architecture, walk them through ECOSYSTEM.md. If they want to send emails, explain the email rules before they hit the send script's rejections.
+Let their answer drive everything. If they say "everything," go broad. If they say "just voice notes," set up only narrativeHero. If they're curious about why something works a certain way, tell them the story from ONBOARDING.md.
 
-## Setup flow (adapt to their interest)
+## Setup flow (adapt to what they chose)
 
 ### Check their machine
 ```bash
 bash setup.sh --check
 ```
-Walk them through any missing tools. The script gives OS-specific install commands.
+Walk them through missing tools. The script gives OS-specific install commands.
 
-### Run setup (all or partial)
+### Run setup
 ```bash
 bash setup.sh                              # everything
-bash setup.sh --project narrativeHero      # just voice notes
+bash setup.sh --project narrativeHero      # just what they need
 ```
 
 ### API key
@@ -52,45 +48,45 @@ They need at minimum a Gemini API key. Help them get one at https://aistudio.goo
 ```bash
 cd narrativeHero && ./dev.sh
 ```
-Verify backend responds: `curl http://localhost:8000/api/models`
+Verify: `curl http://localhost:8000/api/models` should return JSON.
 
-## When they go deeper: use the playbooks
+## Surface playbooks when relevant — not before
 
-Each project has playbooks in `development/playbooks/` that explain the non-obvious rules. Don't make them read all of them — surface the right one when they hit the relevant area:
+Each project has playbooks in `development/playbooks/` explaining non-obvious rules. Don't make them read all of them upfront. Instead, when they touch a specific area, pull in the relevant playbook:
 
-| They're doing... | Point them to | The key thing they'd miss without it |
-|------------------|---------------|--------------------------------------|
-| Sending emails | `crankHero/development/email-playbook.md` | Script blocks em dashes, duplicates, requires dry-run first |
-| Managing sales deals | `crankHero/development/crm-playbook.md` | Deal files are YAML+markdown with specific stages and log format |
-| Writing content scripts | `narrativeHero/development/playbooks/content-tts-pipeline.md` | Unchanged wording = cached = free; changed = new TTS call = cost |
-| Using the task queue | `narrativeHero/development/playbooks/orchestrator-workflow.md` | Must verify in running system, never simulate |
-| Working with Google data | `dataHero/development/playbooks/data-ownership.md` | dataHero reads Gmail but does NOT send — crankHero sends |
-| Running crawl jobs | `dataHero/development/playbooks/crawl-pipeline.md` | Always dry-run; batch confirmation prevents accidental writes |
-| Deploying to production | `osHero/development/playbooks/permission-guard.md` | Permission gate is one-shot — never retry same wording |
-| Debugging service issues | `osHero/development/playbooks/service-supervision.md` | Daemon gives up after 3 restart failures |
-| Investigating categorization | `narrativeHero/development/playbooks/categorization.md` | Keyword-based, learns from folder corrections |
-| Setting up Telegram | `narrativeHero/development/playbooks/telegram-integration.md` | `START_FAST_TUNNELS=1 ./dev.sh` for instant phone access |
+| They're doing... | Read first | What it prevents |
+|------------------|-----------|-----------------|
+| Sending emails | `crankHero/development/email-playbook.md` | Script rejecting their email (em dashes, duplicates) |
+| Managing deals | `crankHero/development/crm-playbook.md` | Wrong deal file format, missing log entries |
+| Writing TTS scripts | `narrativeHero/development/playbooks/content-tts-pipeline.md` | Wasting money on unnecessary re-generation |
+| Using the task queue | `narrativeHero/development/playbooks/orchestrator-workflow.md` | Saying "done" without live verification |
+| Google Workspace data | `dataHero/development/playbooks/data-ownership.md` | Trying to send email from dataHero (wrong project) |
+| Running crawl jobs | `dataHero/development/playbooks/crawl-pipeline.md` | Accidental writes without dry-run |
+| Deploying to prod | `osHero/development/playbooks/permission-guard.md` | Getting blocked by the permission gate |
+| Debugging services | `osHero/development/playbooks/service-supervision.md` | Not knowing the daemon gave up after 3 failures |
+| Categorization | `narrativeHero/development/playbooks/categorization.md` | Not knowing the system learns from folder moves |
+| Telegram setup | `narrativeHero/development/playbooks/telegram-integration.md` | Missing the fast tunnel shortcut |
 
-## Things they might want to improve
+## If they want to improve something
 
-If they ask "what could be better?" or want to contribute, here are real gaps:
+Real gaps they can work on:
 
 - **CRM has no web UI** — deals are markdown files queried via CLI
-- **Categorization is keyword-based** — could use an LLM; the module is isolated
-- **No cross-project search** — you can grep but there's no unified search
-- **Onboarding email parser is rigid** — tightly coupled to Gmail subject format
-- **No tests for email dedup/threading logic** — enforced in code but not tested
-- **Content planner lives in Google Sheets** — a purpose-built UI might be better
-- **Commission sync uses fuzzy name matching** — could break with unusual names
+- **Categorization is keyword-based** — could use an LLM; module is isolated
+- **No cross-project search UI** — grep works but there's no interface
+- **Onboarding parser is rigid** — tightly coupled to Gmail subject format
+- **No tests for email dedup logic** — enforced in code but untested
+- **Content planner is Google Sheets** — could be a purpose-built UI
+- **Commission sync uses fuzzy name matching** — fragile with unusual names
 
 ## Tone
 
-Be conversational. Don't lecture. If they want the short version, give them the short version. If they want to understand why emails can't have em dashes, tell them the story. Match their energy.
+Be conversational. Match their energy. Short answers for short questions. Stories for curiosity. Don't lecture.
 
 ## Verification standard (always applies)
 
-Regardless of the conversation, when you make changes to the codebase:
-- Backend changes: curl the real endpoint on localhost:8000
-- Frontend changes: `npm run check` + verify renders
-- Never use `python -c` to simulate
-- If you can't verify, say "NOT VERIFIED — needs server restart"
+When making code changes:
+- Backend: curl the real endpoint on localhost:8000
+- Frontend: `npm run check` + verify renders
+- Never simulate with `python -c`
+- If you can't verify: "NOT VERIFIED — needs server restart"
