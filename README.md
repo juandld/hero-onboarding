@@ -4,23 +4,19 @@ A system for capturing voice notes, managing sales, and automating workflows —
 
 ## Get started
 
-1. Open [Claude Code](https://claude.ai/code)
-2. Paste this:
+Open [Claude Code](https://claude.ai/code) and paste:
 
 ```
 git clone https://github.com/juandld/hero-onboarding.git && cd hero-onboarding
 ```
 
-3. Then say: **"start this up"**
-
-Claude will walk you through what the system does, ask what you're interested in, set up what you need, and help you get running.
+That's it. Claude picks it up from there.
 
 ## What's inside
 
 - **setup.sh** — detects your OS, installs dependencies, clones projects, configures everything
 - **ONBOARDING.md** — the story of how this system evolved and why it's built this way
 - **ECOSYSTEM.md** — technical architecture: who owns what, how data flows
-- **CLAUDE.md** — instructions for AI agents bootstrapping the system
 
 ## The projects
 
