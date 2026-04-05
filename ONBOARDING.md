@@ -211,3 +211,17 @@ cd crankHero && bash tests/test_all.sh
 | CORS blocked | Set `ALLOWED_ORIGINS` in `backend/.env` |
 | FFmpeg not found | Install it: `brew install ffmpeg` / `apt install ffmpeg` |
 | Svelte type errors | 4 pre-existing errors in `uiApp.ts` — safe to ignore |
+
+## Project-Specific Playbooks
+
+Each project has workflows that go beyond code setup. **Read these before doing real work.**
+
+| Project | Playbook | What it covers |
+|---------|----------|---------------|
+| **crankHero** | `development/email-playbook.md` | Email tone rules, the send script, pre-send checks, CRM integration, threading |
+| **crankHero** | `CLAUDE.md` | Full agent instructions including email drafting, CRM conventions |
+| **narrativeHero** | `CLAUDE.md` | Verification workflow, content planner rules, script format for TTS |
+| **narrativeHero** | `development/north-star.md` | Product direction, design principles |
+| **osHero** | `CLAUDE.md` | Daemon behavior, service registry, alerting conventions |
+
+These aren't optional reading. The email playbook, for example, explains why the send script will reject your email (em dashes, duplicates, missing thread IDs) and what tone to use. The code enforces some rules but not all — the playbooks fill the gap.
