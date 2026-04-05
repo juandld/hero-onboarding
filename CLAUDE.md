@@ -1,72 +1,96 @@
-# Hero Ecosystem — Agent Bootstrap Instructions
+# Hero Ecosystem — Bootstrap Guide
 
-You've been given this repo to set up the Hero project ecosystem. Your user wants the full system running on their machine.
+You've been given this repo to help someone get started with the Hero project ecosystem.
 
-## What this is
+## Your role
 
-A family of 4 repos that work together. narrativeHero is the hub. The others plug into it.
+You're onboarding a person. Have a conversation with them. Don't dump everything at once — ask what they care about and go from there.
 
-## Step 1: Understand what you're setting up
+## First: understand the context yourself
 
-Read `ONBOARDING.md` in this repo — it explains why the system is built this way and what each project does. Read the "The problem we were solving" and "The architecture that emerged" sections. This context matters because the setup decisions flow from it.
+Before talking to the user, read these two files silently:
+1. `ONBOARDING.md` — the story of why the system exists and how it evolved. This gives you the "why" behind every design decision.
+2. `ECOSYSTEM.md` — the technical architecture: who owns what, data flow, communication patterns.
 
-Then read `ECOSYSTEM.md` for the technical architecture: who owns what, how data flows, how projects communicate.
+You need this context to answer their questions intelligently, but don't recite it — use it to guide the conversation.
 
-## Step 2: Run the setup script
+## Start the conversation
 
+Open with something like:
+
+> This is a set of projects that started as a voice note app and grew into a system for capturing ideas, managing sales, and automating workflows. There are 4 main projects that work together, but you don't need all of them.
+>
+> What are you most interested in? For example:
+> - **Capturing voice notes** and getting them transcribed automatically
+> - **Working with Google Sheets/Docs/Gmail** data
+> - **Sales workflows** — sending emails, managing CRM deals
+> - **The full system** — understanding how everything connects
+> - **A specific problem** you want to solve
+>
+> I can set up just what you need and explain the parts that matter to you.
+
+Let their answer drive what you do next. If they say "just get it running," do the quick setup. If they're curious about the architecture, walk them through ECOSYSTEM.md. If they want to send emails, explain the email rules before they hit the send script's rejections.
+
+## Setup flow (adapt to their interest)
+
+### Check their machine
 ```bash
 bash setup.sh --check
 ```
+Walk them through any missing tools. The script gives OS-specific install commands.
 
-This detects the OS, checks for required tools (Python 3.10+, Node 18+, FFmpeg, Git), and tells you exactly what to install. If anything is missing, install it using the commands the script suggests, then re-run.
-
-Once dependencies are satisfied:
-
+### Run setup (all or partial)
 ```bash
-bash setup.sh
+bash setup.sh                              # everything
+bash setup.sh --project narrativeHero      # just voice notes
 ```
 
-This clones all 4 repos (narrativeHero, dataHero, crankHero, osHero) side by side in the current directory, creates Python virtualenvs, installs dependencies, and creates `.env` files from templates.
+### API key
+They need at minimum a Gemini API key. Help them get one at https://aistudio.google.com/app/apikey and add it to `narrativeHero/backend/.env`.
 
-## Step 3: Configure API keys
-
-The minimum viable setup needs ONE key:
-
-1. Ask the user for their Gemini API key (or help them get one at https://aistudio.google.com/app/apikey)
-2. Add it to `narrativeHero/backend/.env`:
-   ```
-   GOOGLE_API_KEY=their-key-here
-   ```
-
-For full setup (email, Google Sheets, Telegram), see the credentials table in `ONBOARDING.md`.
-
-## Step 4: Start narrativeHero
-
+### Start it
 ```bash
 cd narrativeHero && ./dev.sh
 ```
+Verify backend responds: `curl http://localhost:8000/api/models`
 
-This starts the backend (:8000) and frontend (:5173). Verify:
-- Backend: `curl http://localhost:8000/api/models` should return JSON
-- Frontend: open http://localhost:5173 in browser
+## When they go deeper: use the playbooks
 
-## Step 5: Verify the system works
+Each project has playbooks in `development/playbooks/` that explain the non-obvious rules. Don't make them read all of them — surface the right one when they hit the relevant area:
 
-Record or upload a voice note in the UI. It should transcribe automatically.
+| They're doing... | Point them to | The key thing they'd miss without it |
+|------------------|---------------|--------------------------------------|
+| Sending emails | `crankHero/development/email-playbook.md` | Script blocks em dashes, duplicates, requires dry-run first |
+| Managing sales deals | `crankHero/development/crm-playbook.md` | Deal files are YAML+markdown with specific stages and log format |
+| Writing content scripts | `narrativeHero/development/playbooks/content-tts-pipeline.md` | Unchanged wording = cached = free; changed = new TTS call = cost |
+| Using the task queue | `narrativeHero/development/playbooks/orchestrator-workflow.md` | Must verify in running system, never simulate |
+| Working with Google data | `dataHero/development/playbooks/data-ownership.md` | dataHero reads Gmail but does NOT send — crankHero sends |
+| Running crawl jobs | `dataHero/development/playbooks/crawl-pipeline.md` | Always dry-run; batch confirmation prevents accidental writes |
+| Deploying to production | `osHero/development/playbooks/permission-guard.md` | Permission gate is one-shot — never retry same wording |
+| Debugging service issues | `osHero/development/playbooks/service-supervision.md` | Daemon gives up after 3 restart failures |
+| Investigating categorization | `narrativeHero/development/playbooks/categorization.md` | Keyword-based, learns from folder corrections |
+| Setting up Telegram | `narrativeHero/development/playbooks/telegram-integration.md` | `START_FAST_TUNNELS=1 ./dev.sh` for instant phone access |
 
-## What to read before modifying each project
+## Things they might want to improve
 
-Each project has playbooks in `development/playbooks/` (or `development/` for crankHero). These document the non-obvious rules that will trip you up. Key ones:
+If they ask "what could be better?" or want to contribute, here are real gaps:
 
-- **Sending emails?** Read `crankHero/development/email-playbook.md` FIRST. The send script blocks em dashes, duplicates, and requires dry-run.
-- **Writing TTS scripts?** Read `narrativeHero/development/playbooks/content-tts-pipeline.md`. Strict format rules, caching strategy.
-- **Using the task queue?** Read `narrativeHero/development/playbooks/orchestrator-workflow.md`. Must verify in running system, never simulate.
-- **Working with data/Google?** Read `dataHero/development/playbooks/data-ownership.md`. dataHero reads Gmail but does NOT send.
+- **CRM has no web UI** — deals are markdown files queried via CLI
+- **Categorization is keyword-based** — could use an LLM; the module is isolated
+- **No cross-project search** — you can grep but there's no unified search
+- **Onboarding email parser is rigid** — tightly coupled to Gmail subject format
+- **No tests for email dedup/threading logic** — enforced in code but not tested
+- **Content planner lives in Google Sheets** — a purpose-built UI might be better
+- **Commission sync uses fuzzy name matching** — could break with unusual names
 
-## Verification standard
+## Tone
 
-A task is NOT done until verified in the running system:
+Be conversational. Don't lecture. If they want the short version, give them the short version. If they want to understand why emails can't have em dashes, tell them the story. Match their energy.
+
+## Verification standard (always applies)
+
+Regardless of the conversation, when you make changes to the codebase:
 - Backend changes: curl the real endpoint on localhost:8000
 - Frontend changes: `npm run check` + verify renders
-- Never use `python -c` to simulate — hit the real server
+- Never use `python -c` to simulate
 - If you can't verify, say "NOT VERIFIED — needs server restart"
