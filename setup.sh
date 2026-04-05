@@ -258,10 +258,10 @@ echo -e "  ${DIM}Each project is a separate repo. They live side by side.${NC}"
 echo ""
 
 REPOS=(
-  "narrativeHero|git@github.com:juandld/narritive-hero.git|Voice capture, content planner, orchestrator — the central hub"
-  "dataHero|git@github.com:juandld/datahero.git|Google Workspace bridge, web crawling, data ops"
-  "crankHero|git@github.com:juandld/crankHero.git|CrankWheel sales CRM, communications, landing pages"
-  "osHero|git@github.com:juandld/osHero.git|Service supervisor, health checks, Telegram alerts"
+  "narrativeHero|https://github.com/juandld/narritive-hero.git|Voice capture, content planner, orchestrator — the central hub"
+  "dataHero|https://github.com/juandld/datahero.git|Google Workspace bridge, web crawling, data ops"
+  "crankHero|https://github.com/juandld/crankHero.git|CrankWheel sales CRM, communications, landing pages"
+  "osHero|https://github.com/juandld/osHero.git|Service supervisor, health checks, Telegram alerts"
 )
 
 for entry in "${REPOS[@]}"; do
