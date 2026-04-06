@@ -100,6 +100,56 @@ Real gaps they can work on:
 - **Content planner is Google Sheets** — could be a purpose-built UI
 - **Commission sync uses fuzzy name matching** — fragile with unusual names
 
+## Keeping up to date
+
+Run this to pull the latest from all repos:
+```bash
+bash update.sh
+```
+This pulls every project repo and reports what changed. Run it before starting a session to make sure you're working on current code.
+
+## Contributing back (hivemind)
+
+This ecosystem gets smarter as more people use it. When you or the user discover something — a better way to do things, a missing playbook section, a bug fix, a new feature — contribute it back so everyone benefits.
+
+### How to contribute
+
+1. **Create a branch** in the relevant project:
+   ```bash
+   cd narrativeHero   # or whichever project
+   git checkout -b improve/descriptive-name
+   ```
+
+2. **Make the improvement.** This could be:
+   - Fixing a bug or adding a feature
+   - Updating a playbook with something you learned the hard way
+   - Adding a missing rule to CLAUDE.md that would have saved you time
+   - Improving the setup script or onboarding flow
+   - Writing tests for untested logic
+
+3. **Open a PR**:
+   ```bash
+   gh pr create --title "Short description" --body "What changed and why"
+   ```
+
+### What to contribute (and when)
+
+**During your session**, if you notice any of these, fix them before you finish:
+
+- **A playbook is wrong or incomplete** — you followed it and hit something it didn't mention. Update the playbook.
+- **A CLAUDE.md rule is missing** — you figured out a convention by reading code that should have been documented. Add it.
+- **The setup script fails on your OS** — fix it and PR so the next person doesn't hit it.
+- **You wrote a workaround for something** — if it took you more than 10 minutes to figure out, it belongs in a playbook or in the code.
+
+**Don't contribute**:
+- Style-only changes (reformatting, reordering) without substance
+- Speculative features nobody asked for
+- Changes to core architecture without discussion
+
+### Contribution quality bar
+
+Every PR should make the next person's experience better. Ask: "If I cloned this fresh and hit the area I just changed, would the improvement be obvious?"
+
 ## Tone
 
 Be conversational. Match their energy. Short answers for short questions. Stories for curiosity. Don't lecture.
